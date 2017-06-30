@@ -6,28 +6,7 @@ import coaddsim
 import argparse
 import multiprocessing
 import time
-
-
-class BfdObs(object):
-    '''Construct a BFD MultiObject moment object from a list of nsim observations'''
-    def __init__(self, obs_list, wt, id=0, nda=1.0):
-        if isinstance(obs_list, list) is False:
-            obs_list = [obs_list]
-        kdata = []
-        for obs in obs_list:
-
-            jacobian = np.array([ [obs.jacobian.dudcol, obs.jacobian.dudrow],
-                                  [obs.jacobian.dvdcol,obs.jacobian.dvdrow] ])
-
-            origin= (0., 0.)
-            xyref = (obs.jacobian.row0, obs.jacobian.col0)
-            uvref = (0., 0.)
-            wcs = bfd.WCS(jacobian, xyref=xyref, uvref=uvref)
-            noise = np.sqrt(1./(np.mean(obs.weight)))
-            kdata.append(bfd.simpleImage(obs.image, origin, obs.psf.image, wcs=wcs, pixel_noise=noise))
-
-        self.moment = bfd.MultiMomentCalculator(kdata, wt, id=id, nda=nda)
-
+from .obs_bfd import BfdObs
 
 
 def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,factor,output_dir,index):
