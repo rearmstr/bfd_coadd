@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+
 import nsim
 import galsim
 import bfd
@@ -6,7 +8,7 @@ import coaddsim
 import argparse
 import multiprocessing
 import time
-from .obs_bfd import BfdObs
+from bfd_coadd import BfdObs
 
 
 def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,factor,output_dir,index):

@@ -1,4 +1,4 @@
-from . import bfd_obs
+from . import obs_bfd
 
-from .bfd_obs import BfdObs
+from .obs_bfd import BfdObs
 

@@ -1,10 +1,12 @@
+#! /usr/bin/env python
+
 import nsim
 import galsim
 import bfd
 import numpy as np
 import coaddsim
 import argparse
-from .obs_bfd import BfdObs
+from bfd_coadd import BfdObs
 
 
 parser = argparse.ArgumentParser(description='Run single file')
@@ -116,6 +118,3 @@ else:
     table_coadd.save('%s/%s_coadd%s.fits'%(args.output_dir,args.name,args.label))
 
 
-#nohup python submit_integrate.py --njobs 50 --nfiles 1000 --dir target_1p/ --template target_1p_t10000_template_multi_0.fits --template_label t10000_multi  --label target_1p_multi --config test.param  --hours 8 --max_jobs 15 --mins 3 >&log.target_1p.multi&
-
-#nohup python submit_integrate.py --njobs 50 --nfiles 1000 --dir target_1p/ --template target_1p_t10000_template_coadd_0.fits --template_label t10000_coadd  --label target_1p_coadd --config test.param  --hours 8 --max_jobs 15 --mins 3 >&log.target_1p.coadd&
