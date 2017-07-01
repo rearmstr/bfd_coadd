@@ -78,7 +78,6 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         else:
             xyshift, error, msg = bfd_multi.moment.recenter()
             if error:
-                print 'Error:',i,msg,xyshift
                 table_multi.addLost()
             else:
                 table_multi.add(bfd_multi.moment.get_moment(0,0), xy=xyshift, id=i,
@@ -86,7 +85,6 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
 
             xyshift, error, msg = bfd_coadd.moment.recenter()
             if error:
-                print 'Error:',i,msg,xyshift
                 table_coadd.addLost()
             else:
                 table_coadd.add(bfd_coadd.moment.get_moment(0,0), xy=xyshift, id=i,
