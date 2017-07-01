@@ -63,7 +63,7 @@ for ijob in range(args.njobs):
             output='%s/log.%s.%d'%(args.output_dir,args.name,ilabel)
 
     dict['output']=output
-    submit_text += 'time python -u generate_mp_moments.py  --ngal %d --start %s --file %s --output_dir %s --name %s --njobs %d' %(args.ngal,ilabel,args.file, args.output_dir,args.name,args.jpn)
+    submit_text += 'time generate_mp_moments.py  --ngal %d --start %s --file %s --output_dir %s --name %s --njobs %d' %(args.ngal,ilabel,args.file, args.output_dir,args.name,args.jpn)
     if args.template:
             submit_text += ' --template'
     #submit_text += '>& %s\n'%output

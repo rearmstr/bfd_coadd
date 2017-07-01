@@ -11,7 +11,7 @@ parser.add_argument('--max_jobs',default=300,type=int,
 parser.add_argument('--njobs', default=50,type=int,help='number of jobs total to run')
 parser.add_argument('--name',default='name',
                     help='name of submit job')
-parser.add_argument('--exe',default='python -u generate_mp_moments.py',
+parser.add_argument('--exe',default='generate_mp_moments.py',
                     help='executable')
 parser.add_argument('--hours',type=int,default=3,
                     help='how many hours')
@@ -46,7 +46,7 @@ for ii in range(args.njobs):
     output='log.%s.%s.%d'%(args.file,args.type, ilabel)
     dict['output']=output
     use_arg = dict['arg']
-    
+
     use_arg += ' --ngal %d --start %d --file %s --output_dir %s --name %s --njobs %d'%(args.ngal,ilabel,args.file,args.output_dir,args.name,args.jpn)
     #use_arg += ' --ngal %d --start %s --file %s --type %s --njobs 48' %(args.ngal,ilabel,args.file,args.type)
 
