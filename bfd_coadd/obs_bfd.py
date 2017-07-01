@@ -1,4 +1,5 @@
 import bfd
+import numpy as np
 
 
 class BfdObs(object):
