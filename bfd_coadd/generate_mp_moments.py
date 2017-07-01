@@ -48,7 +48,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
 
     else:
         table_multi = bfd.TargetTable(weight_n, weight_sigma, cov=None)
-        table_coadd = bfd.TargetTable(weight_n, weight_sigma, cov=None, use_offset=False)
+        table_coadd = bfd.TargetTable(weight_n, weight_sigma, cov=None)
 
 
     for i in range(ngal):

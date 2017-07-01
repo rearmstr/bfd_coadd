@@ -3,7 +3,7 @@ import bfd
 
 class BfdObs(object):
     '''Construct a BFD MultiObject moment object from a list of nsim observations'''
-    def __init__(self, obs_list, wt, id=0, nda=1.0, use_offset=True):
+    def __init__(self, obs_list, wt, id=0, nda=1.0):
         if isinstance(obs_list, list) is False:
             obs_list = [obs_list]
         kdata = []
@@ -11,12 +11,7 @@ class BfdObs(object):
 
             jacobian = np.array([ [obs.jacobian.dudcol, obs.jacobian.dudrow],
                                   [obs.jacobian.dvdcol,obs.jacobian.dvdrow] ])
-            center = (np.array(obs.image.shape)-1.0)/2.0
-            yxref =  center
-            if use_offset:
-                center += obs.meta['offset_pixels']
-
-            xyref = [yxref[1], yxref[0]]
+            xyref = (obs.jacobian.col0, obs.jacobian.row0)
             uvref = (0., 0.)
             wcs = bfd.WCS(jacobian, xyref=xyref, uvref=uvref)
             origin = uvref

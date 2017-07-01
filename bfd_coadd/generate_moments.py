@@ -75,7 +75,7 @@ for i in range(args.ngal):
     coadd = coadd_image.get_mean_coadd(False)
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
-    bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal, use_offset=False)
+    bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal)
 
     if args.template:
         templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=args.sn_min,
