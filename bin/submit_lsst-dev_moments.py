@@ -55,7 +55,7 @@ for ijob in range(args.njobs):
 #SBATCH -J {fullname}
 #SBATCH -t {hours}:{mins:02d}:00\n""".format(**dict)
 
-    ilabel = ijob*args.jpn
+    ilabel = ijob*args.jpn + args.start
 
     if args.template:
             output='%s/log.%s.template.%d'%(args.output_dir,args.name,ilabel)
