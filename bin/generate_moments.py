@@ -24,6 +24,8 @@ parser.add_argument('--name',default='bdk',type=str, help='sigma max')
 parser.add_argument('--label',default='',type=str, help='label')
 parser.add_argument('--factor',default=100,type=float, help='noise factor for template')
 parser.add_argument('--output_dir',default='.', help='output directory')
+parser.add_argument('--nobs_cov',default=20, type=int,
+                    help='number of observations to compute average covariance on coadd')
 
 args = parser.parse_args()
 
@@ -50,9 +52,25 @@ if args.template:
 obs_test = sims()
 bfd_test = BfdObs(obs_test, weight, id=0, nda=1./args.ngal)
 cov_test = bfd_test.moment.get_covariance()
-
 sigma_flux = np.sqrt(cov_test[0][0,0])
 sigma_xy = np.sqrt(cov_test[1][0,0])
+
+# run over a number of different coadds to average over different shifts
+sigma_fluxes = []
+sigma_xys = []
+for i in range(args.nobs_cov):
+    obs_test = sims()
+    coadd_image = coaddsim.CoaddImages(obs_test)
+    coadd = coadd_image.get_mean_coadd(False)
+    bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal)
+
+    cov_coadd_test = bfd_coadd.moment.get_covariance()
+
+    sigma_fluxes.append(np.sqrt(cov_coadd_test[0][0,0]))
+    sigma_xys.append(np.sqrt(cov_coadd_test[1][0,0]))
+
+sigma_coadd_flux = np.mean(sigma_fluxes)
+sigma_coadd_xy = np.mean(sigma_xys)
 
 if args.template:
     # use errors from noisy measurements
@@ -60,7 +78,9 @@ if args.template:
     sigma_xy *= args.factor
     table_multi = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_xy, sigma_flux,
                                     args.sigma_step, args.sigma_max)
-    table_coadd = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_xy, sigma_flux,
+    sigma_coadd_flux *= args.factor
+    sigma_coadd_xy *= args.factor
+    table_coadd = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_coadd_xy, sigma_coadd_flux,
                                     args.sigma_step, args.sigma_max)
 
 else:
