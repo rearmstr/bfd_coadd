@@ -27,6 +27,7 @@ parser.add_argument('--start',default=0, type=int,
                     help='start labels with this number')
 parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
+parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
 
 args = parser.parse_args()
 
@@ -64,6 +65,8 @@ for ijob in range(args.njobs):
 
     dict['output']=output
     submit_text += 'time generate_mp_moments.py  --ngal %d --start %s --file %s --output_dir %s --name %s --njobs %d' %(args.ngal,ilabel,args.file, args.output_dir,args.name,args.jpn)
+    if args.use_noise_ps:
+            submit_text += ' --use_noise_ps'
     if args.template:
             submit_text += ' --template'
     #submit_text += '>& %s\n'%output

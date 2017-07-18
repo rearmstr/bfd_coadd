@@ -11,11 +11,12 @@ import time
 from bfd_coadd import BfdObs
 
 
-def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,factor,output_dir,index):
+def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,
+           factor,output_dir,index,nobs_cov,use_noise_ps):
 
     wname = multiprocessing.current_process().name
     seed=int(np.random.rand()*100000000)+index
-    weight = bfd.KSigmaWeight(ngal,weight_sigma)
+    weight = bfd.KSigmaWeight(weight_n, weight_sigma)
 
     table_multi = None
     table_coadd = None
@@ -35,9 +36,26 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
     obs_test = sims()
     bfd_test = BfdObs(obs_test, weight, id=0, nda=1./ngal)
     cov_test = bfd_test.moment.get_covariance()
-
     sigma_flux = np.sqrt(cov_test[0][0,0])
     sigma_xy = np.sqrt(cov_test[1][0,0])
+
+    # run over a number of different coadds to average over different shifts
+    sigma_fluxes = []
+    sigma_xys = []
+    for i in range(nobs_cov):
+        obs_test = sims()
+        coadd_image = coaddsim.CoaddImages(obs_test)
+        coadd = coadd_image.get_mean_coadd(False)
+        bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./ngal, compute_noise_ps=use_noise_ps)
+
+        cov_coadd_test = bfd_coadd.moment.get_covariance()
+
+        sigma_fluxes.append(np.sqrt(cov_coadd_test[0][0,0]))
+        sigma_xys.append(np.sqrt(cov_coadd_test[1][0,0]))
+
+    sigma_coadd_flux = np.mean(sigma_fluxes)
+    sigma_coadd_xy = np.mean(sigma_xys)
+
 
     if template:
         # use errors from noisy measurements
@@ -45,8 +63,10 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         sigma_xy *= factor
         table_multi = bfd.TemplateTable(weight_n, weight_sigma, sn_min, sigma_xy, sigma_flux,
                                         sigma_step, sigma_max)
-        table_coadd = bfd.TemplateTable(weight_n, weight_sigma, sn_min, sigma_xy, sigma_flux,
-                                        sigma_step, sigma_max)
+        sigma_coadd_flux *= args.factor
+        sigma_coadd_xy *= args.factor
+        table_coadd = bfd.TemplateTable(weight_n, weight_sigma, sn_min, sigma_coadd_xy, sigma_coadd_flux,
+                                    sigma_step, sigma_max)
 
     else:
         table_multi = bfd.TargetTable(weight_n, weight_sigma, cov=None)
@@ -61,7 +81,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         coadd = coadd_image.get_mean_coadd(False)
 
         bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./ngal)
-        bfd_coadd = BfdObs(coadd, weight, id=i, nda=1./ngal)
+        bfd_coadd = BfdObs(coadd, weight, id=i, nda=1./ngal, compute_noise_ps=args.use_noise_ps)
 
         if template:
             templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=sn_min,
@@ -71,8 +91,8 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
                 if tmpl is not None:
                     table_multi.add(tmpl)
 
-            templates = bfd_coadd.moment.make_templates(sigma_xy, sn_min=sn_min,
-                                                        sigma_flux=sigma_flux, sigma_step=sigma_step,
+            templates = bfd_coadd.moment.make_templates(sigma_coadd_xy, sn_min=sn_min,
+                                                        sigma_flux=sigma_coadd_flux, sigma_step=sigma_step,
                                                         sigma_max=sigma_max, xy_max=xy_max)
             for tmpl in templates:
                 if tmpl is not None:
@@ -120,6 +140,10 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir',default='.', help='output directory')
     parser.add_argument('--start',default=0,type=int, help='output directory')
     parser.add_argument('--njobs',default=48,type=int, help='output directory')
+    parser.add_argument('--nobs_cov',default=20, type=int,
+                            help='number of observations to compute average covariance on coadd')
+    parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
+
     args = parser.parse_args()
     print args.start
 
@@ -128,7 +152,8 @@ if __name__ == '__main__':
         print 'starting',i
         label = '_%d'%(i+args.start)
         arg=(args.weight_n,args.weight_sigma,args.sigma_step,args.sigma_max,args.xy_max,args.sn_min,args.ngal,
-              args.target,args.template,args.file,args.name,label,args.factor,args.output_dir,i+args.start)
+             args.target,args.template,args.file,args.name,label,args.factor,args.output_dir,i+args.start,
+             args.nobs_cov,args.use_noise_ps)
         p = multiprocessing.Process(target=worker, args=arg)
         jobs.append(p)
 
