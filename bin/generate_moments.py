@@ -32,7 +32,7 @@ args = parser.parse_args()
 
 
 seed=int(np.random.rand()*100000000)
-weight = bfd.KSigmaWeight(args.ngal,args.weight_sigma)
+weight = bfd.KSigmaWeight(args.weight_n,args.weight_sigma)
 
 table_multi = None
 table_coadd = None
