@@ -107,8 +107,8 @@ for i in range(args.ngal):
             if tmpl is not None:
                 table_multi.add(tmpl)
 
-        templates = bfd_coadd.moment.make_templates(sigma_xy, sn_min=args.sn_min,
-                                                    sigma_flux=sigma_flux, sigma_step=args.sigma_step,
+        templates = bfd_coadd.moment.make_templates(sigma_coadd_xy, sn_min=args.sn_min,
+                                                    sigma_flux=sigma_coadd_flux, sigma_step=args.sigma_step,
                                                     sigma_max=args.sigma_max, xy_max=args.xy_max)
         for tmpl in templates:
             if tmpl is not None:
