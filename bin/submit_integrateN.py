@@ -73,9 +73,13 @@ for ijob,file_list in enumerate(file_lists):
     for ii in file_list:
         ilabel = args.start + ii
         target = '%s/%s_%d.fits' % (args.dir,args.label,ilabel)
+        if not os.path.exists(target):
+            print target,'does not exist'
+            continue
+        pqr = '%s/pqr_%s_%s_%d.fits' % (args.dir,args.template_label,args.label,ilabel)
         if args.check_exists:
-            if os.path.exists(target):
-                print filename,'already exists'
+            if os.path.exists(pqr):
+                print pqr,'already exists'
                 continue
         ofile.write(target+"\n")
     ofile.close()
@@ -95,4 +99,4 @@ for ijob,file_list in enumerate(file_lists):
     ofile=open(submit_file,'w')
     ofile.write(submit_text)
     ofile.close()
-    #os.system('sbatch %s' % (submit_file))
+    os.system('sbatch %s' % (submit_file))
