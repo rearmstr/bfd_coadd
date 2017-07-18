@@ -26,6 +26,7 @@ parser.add_argument('--factor',default=100,type=float, help='noise factor for te
 parser.add_argument('--output_dir',default='.', help='output directory')
 parser.add_argument('--nobs_cov',default=20, type=int,
                     help='number of observations to compute average covariance on coadd')
+parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
 
 args = parser.parse_args()
 
@@ -62,7 +63,7 @@ for i in range(args.nobs_cov):
     obs_test = sims()
     coadd_image = coaddsim.CoaddImages(obs_test)
     coadd = coadd_image.get_mean_coadd(False)
-    bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal)
+    bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
     cov_coadd_test = bfd_coadd.moment.get_covariance()
 
@@ -97,7 +98,7 @@ for i in range(args.ngal):
     coadd = coadd_image.get_mean_coadd(False)
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
-    bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal)
+    bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
     if args.template:
         templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=args.sn_min,
