@@ -85,7 +85,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
 
         if template:
             templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=sn_min,
-                                                        sigma_flux=sigma_xy, sigma_step=sigma_step,
+                                                        sigma_flux=sigma_flux, sigma_step=sigma_step,
                                                         sigma_max=sigma_max, xy_max=xy_max)
             for tmpl in templates:
                 if tmpl is not None:

@@ -102,7 +102,7 @@ for i in range(args.ngal):
 
     if args.template:
         templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=args.sn_min,
-                                                    sigma_flux=sigma_xy, sigma_step=args.sigma_step,
+                                                    sigma_flux=sigma_flux, sigma_step=args.sigma_step,
                                                     sigma_max=args.sigma_max, xy_max=args.xy_max)
         for tmpl in templates:
             if tmpl is not None:
