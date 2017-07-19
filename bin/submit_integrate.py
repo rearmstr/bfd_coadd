@@ -77,11 +77,11 @@ for ijob,file_list in enumerate(file_lists):
                     print filename,'already exists'
                     continue
 
-        use_arg = '  %s -targetFile %s/%s_%d.fits -templateFile %s -selectSn=%s -pqrFile %s/pqr_%s_%s_%s.fits' %(args.config,
-                                                                                                                args.dir,args.label,ilabel,
-                                                                                                                args.template,
-                                                                                                                args.sn_bins,
-                                                                                                                args.dir,args.label,args.template_label,ilabel)
+        use_arg = '  %s -targetFile %s/%s_%d.fits -templateFile %s -selectSn=%s -pqrFile %s/pqr_%s_%s_%s.fits -useAveCov True' %(args.config,
+                                                                                                                                 args.dir,args.label,ilabel,
+                                                                                                                                 args.template,
+                                                                                                                                 args.sn_bins,
+                                                                                                                                 args.dir,args.label,args.template_label,ilabel)
 
         dict['use_arg'] = use_arg
 
