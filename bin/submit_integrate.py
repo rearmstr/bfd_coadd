@@ -58,7 +58,7 @@ for ijob,file_list in enumerate(file_lists):
         if(num<args.max_jobs):break
         time.sleep(0.25)
 
-    output='%s/log.integrate.%s_%s_%d'%(args.dir, args.label, args.template_label, ijob)
+    output='%s/log.integrate.%s_%s_%d'%(args.dir, args.label, args.template_label, ijob+args.start)
     dict['output']=output
 
     submit_text="""#!/bin/bash
@@ -69,7 +69,7 @@ for ijob,file_list in enumerate(file_lists):
 """.format(**dict)
     print file_list
     for ii in file_list:
-        ilabel = args.start + ii
+        ilabel = ii
 
         filename = '%s/pqr_%s_%s_%s.fits'% (args.dir,args.label,args.template_label,ilabel)
         if args.check_exists:
