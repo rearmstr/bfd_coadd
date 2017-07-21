@@ -42,7 +42,7 @@ for ii in range(args.nfiles):
         ilabel = args.start + ii
         if os.path.exists('%s/%s_%d.fits'%(args.dir,args.label,ilabel)) is False:
             continue
-        file_list.append(ii)
+        file_list.append(ilabel)
 
 print 'Found ',len(file_list),' possible files'
 file_lists=[file_list[i::args.njobs] for i in range(args.njobs)]
