@@ -12,7 +12,7 @@ from bfd_coadd import BfdObs
 
 
 def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,
-           factor,output_dir,index,nobs_cov,use_noise_ps):
+           factor,output_dir,index,nobs_cov,use_noise_ps,sigma):
 
     wname = multiprocessing.current_process().name
     seed=int(np.random.rand()*100000000)+index
@@ -29,7 +29,11 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         for key,value in sims.items():
             new_config[key] = value
 
-        new_config['images']['noise'] = sims['images']['noise']/factor
+        if args.sigma is not None:
+            new_config['images']['noise'] = sigma/factor
+        else:
+            new_config['images']['noise'] = sims['images']['noise']/factor
+
         new_config['shear'] = [0.0, 0.0]
         sims = nsim.sime.Sim(new_config,seed)
 
@@ -137,6 +141,7 @@ if __name__ == '__main__':
     parser.add_argument('--file',default='bdk',type=str, help='sigma max')
     parser.add_argument('--name',default='bdk',type=str, help='sigma max')
     parser.add_argument('--factor',default=100,type=float, help='noise factor for template')
+    parser.add_argument('--sigma',default=None,type=float, help='Use this sigma instead of value from file')
     parser.add_argument('--output_dir',default='.', help='output directory')
     parser.add_argument('--start',default=0,type=int, help='output directory')
     parser.add_argument('--njobs',default=48,type=int, help='output directory')
@@ -153,7 +158,7 @@ if __name__ == '__main__':
         label = '_%d'%(i+args.start)
         arg=(args.weight_n,args.weight_sigma,args.sigma_step,args.sigma_max,args.xy_max,args.sn_min,args.ngal,
              args.target,args.template,args.file,args.name,label,args.factor,args.output_dir,i+args.start,
-             args.nobs_cov,args.use_noise_ps)
+             args.nobs_cov,args.use_noise_ps,args.sigma)
         p = multiprocessing.Process(target=worker, args=arg)
         jobs.append(p)
 

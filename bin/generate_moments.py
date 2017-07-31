@@ -23,6 +23,7 @@ parser.add_argument('--file',default='bdk',type=str, help='sigma max')
 parser.add_argument('--name',default='bdk',type=str, help='sigma max')
 parser.add_argument('--label',default='',type=str, help='label')
 parser.add_argument('--factor',default=100,type=float, help='noise factor for template')
+parser.add_argument('--sigma',default=None,type=float, help='Use this sigma instead of value from file')
 parser.add_argument('--output_dir',default='.', help='output directory')
 parser.add_argument('--nobs_cov',default=20, type=int,
                     help='number of observations to compute average covariance on coadd')
@@ -45,8 +46,10 @@ if args.template:
     new_config={}
     for key,value in sims.items():
         new_config[key] = value
-
-    new_config['images']['noise'] = sims['images']['noise']/args.factor
+    if args.sigma is not None:
+        new_config['images']['noise'] = args.sigma/args.factor
+    else:
+        new_config['images']['noise'] = sims['images']['noise']/args.factor
     new_config['shear'] = [0.0, 0.0]
     sims = nsim.sime.Sim(new_config,seed)
 
