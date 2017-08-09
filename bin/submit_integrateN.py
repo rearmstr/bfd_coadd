@@ -27,6 +27,8 @@ parser.add_argument('--config',default='',
                     help='config file for integration')
 parser.add_argument('--sn_bins',default='5,25',
                     help='bins of S/N')
+parser.add_argument('--noise_factors',default='1.',
+                    help='bins of S/N')
 parser.add_argument('--check_exists',default=False,
                     help='check if file already exists')
 
@@ -84,9 +86,10 @@ for ijob,file_list in enumerate(file_lists):
         ofile.write(target+"\n")
     ofile.close()
 
-    use_arg = '  %s -listFile %s -templateFile %s -selectSn=%s -templateLabel %s -useAveCov True' %(args.config,
+    use_arg = '  %s -listFile %s -templateFile %s -selectSn=%s -noiseFactor %s -templateLabel %s -useAveCov True' %(args.config,
                                                                                                     target_list,
                                                                                                     args.template,
+                                                                                                    args.noise_factor,
                                                                                                     args.sn_bins,
                                                                                                     args.template_label)
 
