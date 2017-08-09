@@ -64,8 +64,8 @@ sigma_fluxes = []
 sigma_xys = []
 for i in range(args.nobs_cov):
     obs_test = sims()
-    coadd_image = coaddsim.CoaddImages(obs_test)
-    coadd = coadd_image.get_mean_coadd(False)
+    coadd_image = coaddsim.CoaddImages(obs_test, interp='lanczos3')
+    coadd = coadd_image.get_mean_coadd()
     bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
     cov_coadd_test = bfd_coadd.moment.get_covariance()
@@ -97,8 +97,8 @@ for i in range(args.ngal):
         print "%d%% done"% int(100.0*i/args.ngal)
 
     obs_list = sims()
-    coadd_image = coaddsim.CoaddImages(obs_list)
-    coadd = coadd_image.get_mean_coadd(False)
+    coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
+    coadd = coadd_image.get_mean_coadd()
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
     bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)

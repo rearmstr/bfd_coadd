@@ -48,8 +48,8 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
     sigma_xys = []
     for i in range(nobs_cov):
         obs_test = sims()
-        coadd_image = coaddsim.CoaddImages(obs_test)
-        coadd = coadd_image.get_mean_coadd(False)
+        coadd_image = coaddsim.CoaddImages(obs_test, interp='lanczos3')
+        coadd = coadd_image.get_mean_coadd()
         bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./ngal, compute_noise_ps=use_noise_ps)
 
         cov_coadd_test = bfd_coadd.moment.get_covariance()
@@ -81,8 +81,8 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         if i%(ngal/10)==0 and i>0:
             print wname,"%d%% done"% int(100.0*i/ngal)
         obs_list = sims()
-        coadd_image = coaddsim.CoaddImages(obs_list)
-        coadd = coadd_image.get_mean_coadd(False)
+        coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
+        coadd = coadd_image.get_mean_coadd()
 
         bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./ngal)
         bfd_coadd = BfdObs(coadd, weight, id=i, nda=1./ngal, compute_noise_ps=args.use_noise_ps)
