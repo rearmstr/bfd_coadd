@@ -12,7 +12,7 @@ from bfd_coadd import BfdObs
 
 
 def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,
-           factor,output_dir,index,nobs_cov,use_noise_ps,sigma):
+           factor,output_dir,index,nobs_cov,use_noise_ps,sigma,psf_seed):
 
     wname = multiprocessing.current_process().name
     seed=int(np.random.rand()*100000000)+index
@@ -37,7 +37,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         new_config['shear'] = [0.0, 0.0]
         sims = nsim.sime.Sim(new_config,seed)
 
-    obs_test = sims()
+    obs_test = sims(psf_seed=psf_seed)
     bfd_test = BfdObs(obs_test, weight, id=0, nda=1./ngal)
     cov_test = bfd_test.moment.get_covariance()
     sigma_flux = np.sqrt(cov_test[0][0,0])
@@ -47,7 +47,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
     sigma_fluxes = []
     sigma_xys = []
     for i in range(nobs_cov):
-        obs_test = sims()
+        obs_test = sims(psf_seed=psf_seed)
         coadd_image = coaddsim.CoaddImages(obs_test, interp='lanczos3')
         coadd = coadd_image.get_mean_coadd()
         bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./ngal, compute_noise_ps=use_noise_ps)
@@ -80,7 +80,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
     for i in range(ngal):
         if i%(ngal/10)==0 and i>0:
             print wname,"%d%% done"% int(100.0*i/ngal)
-        obs_list = sims()
+        obs_list = sims(psf_seed=psf_seed)
         coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
         coadd = coadd_image.get_mean_coadd()
 
@@ -148,6 +148,7 @@ if __name__ == '__main__':
     parser.add_argument('--nobs_cov',default=20, type=int,
                             help='number of observations to compute average covariance on coadd')
     parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
+    parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 
     args = parser.parse_args()
     print args.start
@@ -158,7 +159,7 @@ if __name__ == '__main__':
         label = '_%d'%(i+args.start)
         arg=(args.weight_n,args.weight_sigma,args.sigma_step,args.sigma_max,args.xy_max,args.sn_min,args.ngal,
              args.target,args.template,args.file,args.name,label,args.factor,args.output_dir,i+args.start,
-             args.nobs_cov,args.use_noise_ps,args.sigma)
+             args.nobs_cov,args.use_noise_ps,args.sigma,args.psf_seed)
         p = multiprocessing.Process(target=worker, args=arg)
         jobs.append(p)
 

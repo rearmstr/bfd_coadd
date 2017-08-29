@@ -29,6 +29,7 @@ parser.add_argument('--nobs_cov',default=20, type=int,
                     help='number of observations to compute average covariance on coadd')
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
 parser.add_argument('--seed',default=None,type=int, help='use this seed')
+parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 
 args = parser.parse_args()
 
@@ -56,7 +57,7 @@ if args.template:
     new_config['shear'] = [0.0, 0.0]
     sims = nsim.sime.Sim(new_config,seed)
 
-obs_test = sims()
+obs_test = sims(psf_seed=args.psf_seed)
 bfd_test = BfdObs(obs_test, weight, id=0, nda=1./args.ngal)
 cov_test = bfd_test.moment.get_covariance()
 sigma_flux = np.sqrt(cov_test[0][0,0])
@@ -66,7 +67,7 @@ sigma_xy = np.sqrt(cov_test[1][0,0])
 sigma_fluxes = []
 sigma_xys = []
 for i in range(args.nobs_cov):
-    obs_test = sims()
+    obs_test = sims(psf_seed=args.psf_seed)
     coadd_image = coaddsim.CoaddImages(obs_test, interp='lanczos3')
     coadd = coadd_image.get_mean_coadd()
     bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
@@ -99,7 +100,7 @@ for i in range(args.ngal):
     if i%(args.ngal/10)==0 and i>0:
         print "%d%% done"% int(100.0*i/args.ngal)
 
-    obs_list = sims()
+    obs_list = sims(psf_seed=args.psf_seed)
     coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
     coadd = coadd_image.get_mean_coadd()
 
