@@ -28,12 +28,15 @@ parser.add_argument('--output_dir',default='.', help='output directory')
 parser.add_argument('--nobs_cov',default=20, type=int,
                     help='number of observations to compute average covariance on coadd')
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
+parser.add_argument('--seed',default=None,type=int, help='use this seed')
 
 args = parser.parse_args()
 
 
-
-seed=int(np.random.rand()*100000000)
+if args.seed is None:
+    seed = int(np.random.rand()*100000000)
+else:
+    seed = args.seed
 weight = bfd.KSigmaWeight(args.weight_n, args.weight_sigma)
 
 table_multi = None

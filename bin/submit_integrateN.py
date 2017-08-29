@@ -89,8 +89,8 @@ for ijob,file_list in enumerate(file_lists):
     use_arg = '  %s -listFile %s -templateFile %s -selectSn=%s -noiseFactor %s -templateLabel %s -useAveCov True' %(args.config,
                                                                                                     target_list,
                                                                                                     args.template,
-                                                                                                    args.noise_factor,
                                                                                                     args.sn_bins,
+                                                                                                    args.noise_factors,
                                                                                                     args.template_label)
 
 
