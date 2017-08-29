@@ -28,6 +28,7 @@ parser.add_argument('--start',default=0, type=int,
 parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
+parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 
 args = parser.parse_args()
 
@@ -69,6 +70,8 @@ for ijob in range(args.njobs):
             submit_text += ' --use_noise_ps'
     if args.template:
             submit_text += ' --template'
+    if args.psf_seed > 0:
+        submit_text += ' --psf_seed %d'%args.psf_seed
     #submit_text += '>& %s\n'%output
 
     if args.template:
