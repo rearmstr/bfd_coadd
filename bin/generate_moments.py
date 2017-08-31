@@ -35,7 +35,7 @@ args = parser.parse_args()
 
 
 if args.seed is None:
-    seed = int(np.random.rand()*100000000)
+    seed = np.random.randint(0,2**30)
 else:
     seed = args.seed
 weight = bfd.KSigmaWeight(args.weight_n, args.weight_sigma)
