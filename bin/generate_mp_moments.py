@@ -31,7 +31,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         for key,value in sims.items():
             new_config[key] = value
 
-        if args.sigma is not None:
+        if sigma is not None:
             new_config['images']['noise'] = sigma/factor
         else:
             new_config['images']['noise'] = sims['images']['noise']/factor
@@ -69,8 +69,8 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         sigma_xy *= factor
         table_multi = bfd.TemplateTable(weight_n, weight_sigma, sn_min, sigma_xy, sigma_flux,
                                         sigma_step, sigma_max)
-        sigma_coadd_flux *= args.factor
-        sigma_coadd_xy *= args.factor
+        sigma_coadd_flux *= factor
+        sigma_coadd_xy *= factor
         table_coadd = bfd.TemplateTable(weight_n, weight_sigma, sn_min, sigma_coadd_xy, sigma_coadd_flux,
                                     sigma_step, sigma_max)
 
@@ -87,7 +87,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         coadd = coadd_image.get_mean_coadd()
 
         bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./ngal)
-        bfd_coadd = BfdObs(coadd, weight, id=i, nda=1./ngal, compute_noise_ps=args.use_noise_ps)
+        bfd_coadd = BfdObs(coadd, weight, id=i, nda=1./ngal, compute_noise_ps=use_noise_ps)
 
         if template:
             templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=sn_min,
