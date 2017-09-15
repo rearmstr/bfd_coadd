@@ -16,7 +16,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
 
     wname = multiprocessing.current_process().name
     if seed is None:
-        seed = np.random.randint(0,2**30)
+        seed = np.random.randint(0,2**30)+index
 
     weight = bfd.KSigmaWeight(weight_n, weight_sigma)
 
