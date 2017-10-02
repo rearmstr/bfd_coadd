@@ -85,8 +85,8 @@ for i in range(args.nobs_cov):
     sigma_fluxes.append(np.sqrt(cov_coadd_test[0][0,0]))
     sigma_xys.append(np.sqrt(cov_coadd_test[1][0,0]))
 
-sigma_coadd_flux = np.mean(sigma_fluxes)
-sigma_coadd_xy = np.mean(sigma_xys)
+sigma_coadd_flux = np.median(sigma_fluxes)
+sigma_coadd_xy = np.median(sigma_xys)
 
 if args.template:
     # use errors from noisy measurements
