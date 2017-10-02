@@ -19,6 +19,7 @@ parser.add_argument('--sn_min',default=5,type=float, help='min s/n')
 parser.add_argument('--ngal',default=1000,type=int, help='sigma max')
 parser.add_argument('--target', help='Make target galaxies -OR-', action='store_const', const=True)
 parser.add_argument('--template', help='Make template galaxies', action='store_const', const=True)
+parser.add_argument('--noise_range', help='Noise is using range, needed for templates', action='store_const', const=True,default=None)
 parser.add_argument('--file',default='bdk',type=str, help='sigma max')
 parser.add_argument('--name',default='bdk',type=str, help='sigma max')
 parser.add_argument('--label',default='',type=str, help='label')
@@ -50,10 +51,17 @@ if args.template:
     new_config={}
     for key,value in sims.items():
         new_config[key] = value
-    if args.sigma is not None:
-        new_config['images']['noise'] = args.sigma/args.factor
+
+    if args.noise_range is None:
+        if args.sigma is not None:
+            new_config['images']['noise'] = args.sigma/args.factor
+        else:
+            new_config['images']['noise'] = sims['images']['noise']/args.factor
     else:
-        new_config['images']['noise'] = sims['images']['noise']/args.factor
+        nrange=new_config['images']['noise']['sigma_range']
+        new_config['images']['noise']['sigma_range'] = [nrange[0]/args.factor, nrange[1]/args.factor]
+    print new_config
+
     new_config['shear'] = [0.0, 0.0]
     sims = nsim.sime.Sim(new_config,seed)
 
