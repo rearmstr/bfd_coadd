@@ -65,7 +65,7 @@ for ijob,file_list in enumerate(file_lists):
 
     submit_text="""#!/bin/bash
 #SBATCH -N 1
-#SBATCH -c 48
+#SBATCH -c 24
 #SBATCH --output={output}
 #SBATCH -t {hours}:{mins:02d}:00
 """.format(**dict)
