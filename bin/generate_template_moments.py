@@ -72,8 +72,8 @@ sigmas_coadd_xy=[]
 sigmas_coadd_flux=[]
 coadd_bins=[]
 for i in range(len(coadd_cov)):
-    sigma_coadd_flux = coadd_cov['cov_even'][i][0]
-    sigma_coadd_xy = coadd_cov['cov_odd'][i][0]
+    sigma_coadd_flux = np.sqrt(coadd_cov['cov_even'][i][0])
+    sigma_coadd_xy = np.sqrt(coadd_cov['cov_odd'][i][0])
     table_coadd = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_coadd_xy, sigma_coadd_flux,
                                     args.sigma_step, args.sigma_max)
     tables_coadd.append(table_coadd)
@@ -86,8 +86,8 @@ sigmas_multi_xy=[]
 sigmas_multi_flux=[]
 multi_bins=[]
 for i in range(len(multi_cov)):
-    sigma_multi_flux = multi_cov['cov_even'][i][0]
-    sigma_multi_xy = multi_cov['cov_odd'][i][0]
+    sigma_multi_flux = np.sqrt(multi_cov['cov_even'][i][0])
+    sigma_multi_xy = np.sqrt(multi_cov['cov_odd'][i][0])
     table_multi = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_multi_xy, sigma_multi_flux,
                                     args.sigma_step, args.sigma_max)
     tables_multi.append(table_multi)
@@ -108,7 +108,7 @@ for i in range(args.ngal):
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
     bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
-    for table,sigma_xy,sigma_flux in zip(tables_coadd,sigmas_coadd_xy,sigmas_coadd_flux):
+    for table,sigma_xy,sigma_flux in zip(tables_coadd, sigmas_coadd_xy, sigmas_coadd_flux):
         templates = bfd_coadd.moment.make_templates(sigma_xy, sn_min=args.sn_min,
                                                     sigma_flux=sigma_flux, sigma_step=args.sigma_step,
                                                     sigma_max=args.sigma_max, xy_max=args.xy_max)
@@ -116,7 +116,7 @@ for i in range(args.ngal):
             if tmpl is not None:
                 table.add(tmpl)
 
-    for table,sigma_xy,sigma_flux in zip(tables_multi,sigmas_multi_xy,sigmas_multi_flux):
+    for table,sigma_xy,sigma_flux in zip(tables_multi, sigmas_multi_xy, sigmas_multi_flux):
         templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=args.sn_min,
                                                     sigma_flux=sigma_flux, sigma_step=args.sigma_step,
                                                     sigma_max=args.sigma_max, xy_max=args.xy_max)
@@ -128,7 +128,7 @@ for i in range(args.ngal):
 for bin,table in zip(coadd_bins,tables_coadd):
     table.save('%s/%s_template_coadd%s_%s.fits'%(args.output_dir,args.name,args.label,bin))
 
-for bin,table in zip(multi_bins,tables_coadd):
+for bin,table in zip(multi_bins,tables_multi):
     table.save('%s/%s_template_multi%s_%s.fits'%(args.output_dir,args.name,args.label,bin))
 
 

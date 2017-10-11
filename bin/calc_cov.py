@@ -9,6 +9,7 @@ parser.add_argument('--var',default=0.1,type=float,help='allowed variation')
 parser.add_argument('--low',default=1,type=float,help='minimnum percentile')
 parser.add_argument('--high',default=99,type=float,help='minimnum percentile')
 parser.add_argument('--outfile',default="out.fits",help='file to write out')
+parser.add_argument('--max_files',default=500,type=int,help='maximum files to read in')
 args = parser.parse_args()
 
 
@@ -17,7 +18,10 @@ cov_even = []
 cov_odd = []
 
 files_read = 0
-for file in files:
+if len(files) < args.max_files:
+    args.max_files=len(files)
+
+for file in files[:args.max_files]:
     try:
         f=Table.read(file)
     except Exception as e:
