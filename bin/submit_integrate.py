@@ -33,7 +33,7 @@ parser.add_argument('--ncpu',default=24,type=int,
                     help='number of cpus')
 
 args = parser.parse_args()
-if os.path.exists(args.dir) is False:
+if os.path.exists(args.dir+"/submit_files") is False:
     os.makedirs(args.dir+"/submit_files")
 # convert options to dictionary to use with format
 dict=vars(args)
