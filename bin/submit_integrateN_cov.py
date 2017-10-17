@@ -34,7 +34,8 @@ parser.add_argument('--check_exists',default=False,
                     help='check if file already exists')
 parser.add_argument('--cov_file',default='',
                     help='name of covariance file')
-
+parser.add_argument('--ncpu',default=24,type=int,
+                    help='number of cpus')
 
 args = parser.parse_args()
 if os.path.exists(args.dir) is False:
@@ -61,7 +62,7 @@ for ijob,file_list in enumerate(file_lists):
 
     submit_text="""#!/bin/bash
 #SBATCH -N 1
-#SBATCH -c 24
+#SBATCH -c {ncpu}
 #SBATCH --output={output}
 #SBATCH -t {hours}:{mins:02d}:00
     """.format(**dict)

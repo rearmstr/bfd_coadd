@@ -29,7 +29,8 @@ parser.add_argument('--sn_bins',default='5,25',
                     help='bins of S/N')
 parser.add_argument('--check_exists',default=False,
                     help='check if file already exists')
-
+parser.add_argument('--ncpu',default=24,type=int,
+                    help='number of cpus')
 
 args = parser.parse_args()
 if os.path.exists(args.dir) is False:
@@ -63,7 +64,7 @@ for ijob,file_list in enumerate(file_lists):
 
     submit_text="""#!/bin/bash
 #SBATCH -N 1
-#SBATCH -c 48
+#SBATCH -c {ncpu}
 #SBATCH --output={output}
 #SBATCH -t {hours}:{mins:02d}:00
 """.format(**dict)
