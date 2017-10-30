@@ -81,7 +81,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
 
     for i in range(ngal):
         if i%(ngal/10)==0 and i>0:
-            print wname,"%d%% done"% int(100.0*i/ngal)
+            print(wname,"%d%% done"% int(100.0*i/ngal))
         obs_list = sims(psf_seed=psf_seed)
         coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
         coadd = coadd_image.get_mean_coadd()

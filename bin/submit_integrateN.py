@@ -48,17 +48,17 @@ for ii in range(args.nfiles):
             continue
         file_list.append(ii)
 
-print 'Found ',len(file_list),' possible files'
+print('Found ',len(file_list),' possible files')
 file_lists=[file_list[i::args.njobs] for i in range(args.njobs)]
 
 for ijob,file_list in enumerate(file_lists):
-    print ijob
+    print(ijob)
     # Wait until the number of jobs is low enough
     while True:
         pipe = sub.Popen(['squeue','-u','rea3'],stdout=sub.PIPE)
         # count the number of jobs currently running
         q_out=pipe.communicate()[0]
-        num=len(q_out.split('\n'))-1
+        num=len(str(q_out).split('\n'))-1
         if(num<args.max_jobs):break
         time.sleep(0.25)
 
@@ -78,12 +78,12 @@ for ijob,file_list in enumerate(file_lists):
         ilabel = args.start + ii
         target = '%s/%s_%d.fits' % (args.dir,args.label,ilabel)
         if not os.path.exists(target):
-            print target,'does not exist'
+            print(target,'does not exist')
             continue
         pqr = '%s/pqr_%s_%s_%d.fits' % (args.dir,args.template_label,args.label,ilabel)
         if args.check_exists:
             if os.path.exists(pqr):
-                print pqr,'already exists'
+                print(pqr,'already exists')
                 continue
         ofile.write(target+"\n")
     ofile.close()

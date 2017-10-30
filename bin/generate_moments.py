@@ -60,7 +60,7 @@ if args.template:
     else:
         nrange=new_config['images']['noise']['sigma_range']
         new_config['images']['noise']['sigma_range'] = [nrange[0]/args.factor, nrange[1]/args.factor]
-    print new_config
+    print(new_config)
 
     new_config['shear'] = [0.0, 0.0]
     sims = nsim.sime.Sim(new_config,seed)
@@ -106,7 +106,7 @@ else:
 
 for i in range(args.ngal):
     if i%(args.ngal/10)==0 and i>0:
-        print "%d%% done"% int(100.0*i/args.ngal)
+        print("%d%% done"% int(100.0*i/args.ngal))
 
     obs_list = sims(psf_seed=args.psf_seed)
     coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')

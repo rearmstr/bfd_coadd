@@ -45,7 +45,7 @@ for ii in range(args.nfiles):
             continue
         file_list.append(ilabel)
 
-print 'Found ',len(file_list),' possible files'
+print('Found ',len(file_list),' possible files')
 file_lists=[file_list[i::args.njobs] for i in range(args.njobs)]
 
 for ijob,file_list in enumerate(file_lists):
@@ -55,7 +55,7 @@ for ijob,file_list in enumerate(file_lists):
         pipe = sub.Popen(['squeue','-u','rea3'],stdout=sub.PIPE)
         # count the number of jobs currently running
         q_out=pipe.communicate()[0]
-        num=len(q_out.split('\n'))-1
+        num=len(str(q_out).split('\n'))-1
         if(num<args.max_jobs):break
         time.sleep(0.25)
 
