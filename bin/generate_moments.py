@@ -31,6 +31,7 @@ parser.add_argument('--nobs_cov',default=20, type=int,
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
 parser.add_argument('--seed',default=None,type=int, help='use this seed')
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
+parser.add_argument('--interp',default='lanczos3',type=str, help='interpolation kernel')
 
 args = parser.parse_args()
 
@@ -76,7 +77,7 @@ sigma_fluxes = []
 sigma_xys = []
 for i in range(args.nobs_cov):
     obs_test = sims(psf_seed=args.psf_seed)
-    coadd_image = coaddsim.CoaddImages(obs_test, interp='lanczos3')
+    coadd_image = coaddsim.CoaddImages(obs_test, interp=args.interp)
     coadd = coadd_image.get_mean_coadd()
     bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
@@ -109,7 +110,7 @@ for i in range(args.ngal):
         print("%d%% done"% int(100.0*i/args.ngal))
 
     obs_list = sims(psf_seed=args.psf_seed)
-    coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
+    coadd_image = coaddsim.CoaddImages(obs_list, interp=args.interp)
     coadd = coadd_image.get_mean_coadd()
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)

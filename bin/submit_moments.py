@@ -40,7 +40,7 @@ for ii in range(args.njobs):
         pipe = sub.Popen(['squeue','-u','rea3'],stdout=sub.PIPE)
         # count the number of jobs currently running
         q_out=pipe.communicate()[0]
-        num=len(q_out.split('\n'))-1
+        num=len(str(q_out).split('\\n'))-1
         if(num<args.max_jobs):break
         time.sleep(0.25)
     output='log.%s.%s.%d'%(args.file,args.type, ilabel)

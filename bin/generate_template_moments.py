@@ -30,7 +30,7 @@ parser.add_argument('--seed',default=None,type=int, help='use this seed')
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 parser.add_argument('--coadd_cov_file',default=None,help='use covariance file')
 parser.add_argument('--multi_cov_file',default=None,help='use covariance file')
-
+parser.add_argument('--interp',default='lanczos3',type=str, help='interpolation kernel')
 
 args = parser.parse_args()
 
@@ -88,7 +88,7 @@ multi_bins=[]
 for i in range(len(multi_cov)):
     sigma_multi_flux = np.sqrt(multi_cov['cov_even'][i][0])
     sigma_multi_xy = np.sqrt(multi_cov['cov_odd'][i][0])
-    table_multi = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_multi_xy, sigma_multi_flux,
+    table_multi = bfd.TemplateTable(args.weight_n, args.]weight_sigma, args.sn_min, sigma_multi_xy, sigma_multi_flux,
                                     args.sigma_step, args.sigma_max)
     tables_multi.append(table_multi)
     sigmas_multi_xy.append(sigma_multi_xy)
@@ -102,7 +102,7 @@ for i in range(args.ngal):
         print "%d%% done"% int(100.0*i/args.ngal)
 
     obs_list = sims(psf_seed=args.psf_seed)
-    coadd_image = coaddsim.CoaddImages(obs_list, interp='lanczos3')
+    coadd_image = coaddsim.CoaddImages(obs_list, interp=args.interp)
     coadd = coadd_image.get_mean_coadd()
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
