@@ -27,7 +27,7 @@ parser.add_argument('--start',default=0, type=int,
 parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
 parser.add_argument('--output_dir', default='.',help='Output_directory')
-parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
+parser.add_argument('--flat_wcs', dest='flat_wcs', default=True, action='store_true')
 
 args = parser.parse_args()
 

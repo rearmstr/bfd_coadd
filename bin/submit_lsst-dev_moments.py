@@ -28,7 +28,7 @@ parser.add_argument('--start',default=0, type=int,
 parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
-parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
+parser.add_argument('--flat_wcs', dest='flat_wcs', default=True, action='store_true')
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 
 args = parser.parse_args()
