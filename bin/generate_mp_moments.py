@@ -12,7 +12,7 @@ from bfd_coadd import BfdObs
 
 
 def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,template,file,name,label,
-           factor,output_dir,index,nobs_cov,use_noise_ps,sigma,psf_seed,seed,interp):
+           factor,output_dir,index,nobs_cov,use_noise_ps,sigma,psf_seed,seed,interp,flat_wcs):
 
     wname = multiprocessing.current_process().name
     if seed is None:
@@ -50,7 +50,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
     sigma_xys = []
     for i in range(nobs_cov):
         obs_test = sims(psf_seed=psf_seed)
-        coadd_image = coaddsim.CoaddImages(obs_test, interp=interp)
+        coadd_image = coaddsim.CoaddImages(obs_test, interp=interp, flat_wcs=flat_wcs)
         coadd = coadd_image.get_mean_coadd()
         bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./ngal, compute_noise_ps=use_noise_ps)
 
@@ -83,7 +83,7 @@ def worker(weight_n,weight_sigma,sigma_step,sigma_max,xy_max,sn_min,ngal,target,
         if i%(ngal/10)==0 and i>0:
             print(wname,"%d%% done"% int(100.0*i/ngal))
         obs_list = sims(psf_seed=psf_seed)
-        coadd_image = coaddsim.CoaddImages(obs_list, interp=interp)
+        coadd_image = coaddsim.CoaddImages(obs_list, interp=interp, flat_wcs=flat_wcs)
         coadd = coadd_image.get_mean_coadd()
 
         bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./ngal)
@@ -153,6 +153,7 @@ if __name__ == '__main__':
     parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed for psf')
     parser.add_argument('--seed',default=None,type=int, help='use this seed')
     parser.add_argument('--interp',default='lanczos3',type=str, help='interpolation kernel')
+    parser.add_argument('--flat_wcs',dest='flat_wcs', default=True, action='store_true')
 
     args = parser.parse_args()
     print(args.start)
@@ -163,7 +164,7 @@ if __name__ == '__main__':
         label = '_%d'%(i+args.start)
         arg=(args.weight_n,args.weight_sigma,args.sigma_step,args.sigma_max,args.xy_max,args.sn_min,args.ngal,
              args.target,args.template,args.file,args.name,label,args.factor,args.output_dir,i+args.start,
-             args.nobs_cov,args.use_noise_ps,args.sigma,args.psf_seed,args.seed,args.interp)
+             args.nobs_cov,args.use_noise_ps,args.sigma,args.psf_seed,args.seed,args.interp,args.flat_wcs)
         p = multiprocessing.Process(target=worker, args=arg)
         jobs.append(p)
 

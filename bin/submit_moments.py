@@ -27,7 +27,7 @@ parser.add_argument('--start',default=0, type=int,
 parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
 parser.add_argument('--output_dir', default='.',help='Output_directory')
-
+parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
 
 args = parser.parse_args()
 
@@ -49,7 +49,8 @@ for ii in range(args.njobs):
 
     use_arg += ' --ngal %d --start %d --file %s --output_dir %s --name %s --njobs %d'%(args.ngal,ilabel,args.file,args.output_dir,args.name,args.jpn)
     #use_arg += ' --ngal %d --start %s --file %s --type %s --njobs 48' %(args.ngal,ilabel,args.file,args.type)
-
+    if args.flat_wcs:
+            submit_text += ' --flat_wcs'
 
     dict['use_arg'] = use_arg
     submit_text="""#!/bin/bash

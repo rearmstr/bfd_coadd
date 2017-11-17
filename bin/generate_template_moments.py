@@ -31,7 +31,7 @@ parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 parser.add_argument('--coadd_cov_file',default=None,help='use covariance file')
 parser.add_argument('--multi_cov_file',default=None,help='use covariance file')
 parser.add_argument('--interp',default='lanczos3',type=str, help='interpolation kernel')
-
+parser.add_argument('--flat_wcs',dest='flat_wcs', default=True, action='store_true')
 args = parser.parse_args()
 
 
@@ -102,7 +102,7 @@ for i in range(args.ngal):
         print "%d%% done"% int(100.0*i/args.ngal)
 
     obs_list = sims(psf_seed=args.psf_seed)
-    coadd_image = coaddsim.CoaddImages(obs_list, interp=args.interp)
+    coadd_image = coaddsim.CoaddImages(obs_list, interp=args.interp, flat_wcs=args.flat_wcs)
     coadd = coadd_image.get_mean_coadd()
 
     bfd_multi = BfdObs(obs_list, weight, id=i, nda=1./args.ngal)
