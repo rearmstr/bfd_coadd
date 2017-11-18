@@ -33,6 +33,8 @@ parser.add_argument('--check_exists',default=False,
                     help='check if file already exists')
 parser.add_argument('--ncpu',default=24,type=int,
                     help='number of cpus')
+parser.add_argument('--wait',default=0.25,type=float,
+                    help='time between checks')
 
 
 args = parser.parse_args()
@@ -60,7 +62,7 @@ for ijob,file_list in enumerate(file_lists):
         q_out=pipe.communicate()[0]
         num=len(str(q_out).split('\\n'))-1
         if(num<args.max_jobs):break
-        time.sleep(0.25)
+        time.sleep(args.wait)
 
     output='%s/log.integrateN.%s_%s_%d'%(args.dir, args.label, args.template_label, ijob)
     dict['output']=output
