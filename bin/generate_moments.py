@@ -32,7 +32,7 @@ parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action
 parser.add_argument('--seed',default=None,type=int, help='use this seed')
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 parser.add_argument('--interp',default='lanczos3',type=str, help='interpolation kernel')
-parser.add_argument('--flat_wcs',dest='flat_wcs', default=True, action='store_true')
+parser.add_argument('--flat_wcs',dest='flat_wcs', default=False, action='store_true')
 
 args = parser.parse_args()
 
