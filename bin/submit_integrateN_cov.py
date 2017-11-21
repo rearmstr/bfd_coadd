@@ -36,6 +36,8 @@ parser.add_argument('--cov_file',default='',
                     help='name of covariance file')
 parser.add_argument('--ncpu',default=24,type=int,
                     help='number of cpus')
+parser.add_argument('--wait',default=0.25,type=float,
+                    help='time between checks')
 
 args = parser.parse_args()
 if os.path.exists(args.dir+"/submit_files") is False:
@@ -77,7 +79,7 @@ for ijob,file_list in enumerate(file_lists):
             q_out=pipe.communicate()[0]
             num=len(str(q_out).split('\\n'))-1
             if(num<args.max_jobs):break
-            time.sleep(0.25)
+            time.sleep(args.wait)
 
 
 

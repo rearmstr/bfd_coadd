@@ -28,6 +28,8 @@ parser.add_argument('--jpn',default=48, type=int,
                     help='jobs per node')
 parser.add_argument('--output_dir', default='.',help='Output_directory')
 parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
+parser.add_argument('--wait',default=0.25,type=float,
+                    help='time between checks')
 
 args = parser.parse_args()
 
@@ -42,7 +44,7 @@ for ii in range(args.njobs):
         q_out=pipe.communicate()[0]
         num=len(str(q_out).split('\\n'))-1
         if(num<args.max_jobs):break
-        time.sleep(0.25)
+        time.sleep(args.wait)
     output='log.%s.%s.%d'%(args.file,args.type, ilabel)
     dict['output']=output
     use_arg = dict['arg']

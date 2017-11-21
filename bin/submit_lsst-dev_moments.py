@@ -30,6 +30,8 @@ parser.add_argument('--jpn',default=48, type=int,
 parser.add_argument('--use_noise_ps', dest='use_noise_ps', default=False, action='store_true')
 parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
+parser.add_argument('--wait',default=0.25,type=float,
+                    help='time between checks')
 
 args = parser.parse_args()
 
@@ -48,7 +50,7 @@ for ijob in range(args.njobs):
         q_out=pipe.communicate()[0]
         num=len(str(q_out).split('\\n'))-1
         if(num<args.max_jobs):break
-        time.sleep(0.25)
+        time.sleep(args.wait)
 
     name='%s.%d'%(args.name,ijob)
     dict['fullname']=name
