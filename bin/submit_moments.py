@@ -30,7 +30,7 @@ parser.add_argument('--output_dir', default='.',help='Output_directory')
 parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_true')
 parser.add_argument('--wait',default=0.25,type=float,
                     help='time between checks')
-
+parser.add_argument('--noise_n',default=48,type=int, help='size of noise image')
 args = parser.parse_args()
 
 # convert options to dictionary to use with format
@@ -49,7 +49,7 @@ for ii in range(args.njobs):
     dict['output']=output
     use_arg = dict['arg']
 
-    use_arg += ' --ngal %d --start %d --file %s --output_dir %s --name %s --njobs %d'%(args.ngal,ilabel,args.file,args.output_dir,args.name,args.jpn)
+    use_arg += ' --ngal %d --start %d --file %s --output_dir %s --name %s --njobs %d  --noise_n %d'%(args.ngal,ilabel,args.file,args.output_dir,args.name,args.jpn,args.noise_n)
     #use_arg += ' --ngal %d --start %s --file %s --type %s --njobs 48' %(args.ngal,ilabel,args.file,args.type)
     if args.flat_wcs:
             submit_text += ' --flat_wcs'

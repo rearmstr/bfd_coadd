@@ -32,6 +32,7 @@ parser.add_argument('--flat_wcs', dest='flat_wcs', default=False, action='store_
 parser.add_argument('--psf_seed',default=-1,type=int, help='use this seed')
 parser.add_argument('--wait',default=0.25,type=float,
                     help='time between checks')
+parser.add_argument('--noise_n',default=48,type=int, help='size of noise image')
 
 args = parser.parse_args()
 
@@ -68,7 +69,7 @@ for ijob in range(args.njobs):
             output='%s/log.%s.%d'%(args.output_dir,args.name,ilabel)
 
     dict['output']=output
-    submit_text += 'time generate_mp_moments.py  --ngal %d --start %s --file %s --output_dir %s --name %s --njobs %d' %(args.ngal,ilabel,args.file, args.output_dir,args.name,args.jpn)
+    submit_text += 'time generate_mp_moments.py  --ngal %d --start %s --file %s --output_dir %s --name %s --njobs %d --noise_n %d' %(args.ngal,ilabel,args.file, args.output_dir,args.name,args.jpn,args.noise_n)
     if args.use_noise_ps:
             submit_text += ' --use_noise_ps'
     if args.flat_wcs:
