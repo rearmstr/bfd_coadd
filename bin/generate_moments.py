@@ -77,9 +77,18 @@ sigma_xy = np.sqrt(cov_test[1][0,0])
 # run over a number of different coadds to average over different shifts
 sigma_fluxes = []
 sigma_xys = []
+sigma_multi_fluxes = []
+sigma_multi_xys = []
 for i in range(args.nobs_cov):
     obs_test = sims(psf_seed=args.psf_seed)
-    coadd_image = coaddsim.CoaddImages(obs_test, interp=args.interp, flat_wcs=args.flat_wcs)
+    bfd_multi = BfdObs(obs_test, weight, id=0, nda=1./args.ngal)
+    cov_multi = bfd_multi.moment.get_covariance()
+    sigma_multi_flux = np.sqrt(cov_multi[0][0,0])
+    sigma_multi_xy = np.sqrt(cov_multi[1][0,0])
+    sigma_multi_fluxes.append(sigma_multi_flux)
+    sigma_multi_xys.append(sigma_multi_xy)
+
+    coadd_image = coaddsim.CoaddImages(obs_test, interp=args.interp, flat_wcs=args.flat_wcs, noise_n=args.noise_n)
     coadd = coadd_image.get_mean_coadd()
     bfd_coadd = BfdObs(coadd, weight, id=0, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
@@ -91,11 +100,14 @@ for i in range(args.nobs_cov):
 sigma_coadd_flux = np.median(sigma_fluxes)
 sigma_coadd_xy = np.median(sigma_xys)
 
+sigma_multi_flux = np.median(sigma_multi_fluxes)
+sigma_multi_xy = np.median(sigma_multi_xys)
+
 if args.template:
     # use errors from noisy measurements
-    sigma_flux *= args.factor
-    sigma_xy *= args.factor
-    table_multi = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_xy, sigma_flux,
+    sigma_multi_flux *= args.factor
+    sigma_multi_xy *= args.factor
+    table_multi = bfd.TemplateTable(args.weight_n, args.weight_sigma, args.sn_min, sigma_multi_xy, sigma_multi_flux,
                                     args.sigma_step, args.sigma_max)
     sigma_coadd_flux *= args.factor
     sigma_coadd_xy *= args.factor
