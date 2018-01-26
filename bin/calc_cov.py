@@ -25,14 +25,15 @@ for file in files[:args.max_files]:
     try:
         f=Table.read(file)
     except Exception as e:
-        print e
+        print (e)
         continue
 
     cov_even.extend(f['cov_even'])
     cov_odd.extend(f['cov_odd'])
+    print (np.sqrt(np.median(f['cov_even'],axis=0)[0]))
     files_read +=1
 
-print 'read',files_read,'files'
+print ('read',files_read,'files')
 
 cov_even = np.array(cov_even)
 cov_odd = np.array(cov_odd)
@@ -51,18 +52,18 @@ final_ave_odd=np.zeros((bins,len(cov_odd[0])))
 flux_cov_min = np.zeros(bins)
 flux_cov_max = np.zeros(bins)
 
-print 'full range',lmin,lmax
+print ('full range',lmin,lmax)
 for i in range(bins):
     cmin = i*binsize + lmin
     cmax = (i+1)*binsize + lmin
-    print 'bin',i+1,'min',cmin,'max',cmax
+    print ('bin',i+1,'min',cmin,'max',cmax)
 
     mask = (np.sqrt(cov_even[:,0])>cmin) & (np.sqrt(cov_even[:,0])<cmax)
-    ave_even = np.mean(cov_even[mask],axis=0)
-    ave_odd = np.mean(cov_odd[mask],axis=0)
+    ave_even = np.median(cov_even[mask],axis=0)
+    ave_odd = np.median(cov_odd[mask],axis=0)
 
-    print ' even',ave_even
-    print ' odd',ave_odd
+    print (' even',ave_even)
+    print (' odd',ave_odd)
     final_ave_even[i] = ave_even
     final_ave_odd[i] = ave_odd
     flux_cov_min[i] = cmin
