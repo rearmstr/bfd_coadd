@@ -131,8 +131,8 @@ for i in range(args.ngal):
     bfd_coadd = BfdObs(coadd,    weight, id=i, nda=1./args.ngal, compute_noise_ps=args.use_noise_ps)
 
     if args.template:
-        templates = bfd_multi.moment.make_templates(sigma_xy, sn_min=args.sn_min,
-                                                    sigma_flux=sigma_flux, sigma_step=args.sigma_step,
+        templates = bfd_multi.moment.make_templates(sigma_multi_xy, sn_min=args.sn_min,
+                                                    sigma_flux=sigma_multi_flux, sigma_step=args.sigma_step,
                                                     sigma_max=args.sigma_max, xy_max=args.xy_max)
         for tmpl in templates:
             if tmpl is not None:
